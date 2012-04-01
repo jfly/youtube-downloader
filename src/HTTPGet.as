@@ -11,6 +11,7 @@ package {
 	import flash.display.LoaderInfo;
 	import flash.system.Security;
 	import flash.system.SecurityPanel;
+    import flash.net.*;
 
 	public class HTTPGet extends Sprite {
 
@@ -35,6 +36,8 @@ package {
 
 		private static var updateCallback:String;
 		private static var errorCallback:String;
+        private static var jsCallbackFunctionName:String;
+        private var loader:URLLoader = new URLLoader();
 
 		public function HTTPGet() {
 			try {
@@ -54,8 +57,16 @@ package {
 				updateCallback = params.updateCallback;
 				errorCallback = params.errorCallback;
 
-				ExternalInterface.addCallback("get", function(url:String):String {
-					return "TODO";
+				ExternalInterface.addCallback("get", function(url:String, functionName:String):void {
+                    var request:URLRequest = new URLRequest("http://localhost:8000");
+                    try {
+                        jsCallbackFunctionName = functionName;
+                        loader.load(request);
+                    } catch (error:Error) {
+                        callJs(jsCallbackFunctionName, "unable to load requested doc");
+                        trace("Unable to load requested document.");
+                    }
+                    callJs(functionName, url);
 				});
 				ExternalInterface.addCallback("ping", function():Boolean {
 					return true;
