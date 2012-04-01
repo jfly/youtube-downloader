@@ -63,6 +63,8 @@ package {
 			} catch(e:Error) {
 				handleError(this, e);
 			}
+      
+      callJs('HTTPGetLoadedCallback', 'true');
 		}
 
 		public static function handleError(source:Object, e:Error):void {

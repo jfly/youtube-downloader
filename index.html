@@ -1,0 +1,22 @@
+<html>
+<head>
+<script src="js/youtube-downloader.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+window.addEventListener('load', function(e) {
+  ytdl.init(function(e) {
+    if(!e.success) {
+      alert("Uh-oh!");
+      return;
+    }
+
+    var swf = e.ref;
+    alert(swf.get('foo'));
+  });
+}, false);
+</script>
+</head>
+<body>
+Hello, world!
+</body>
+</html>

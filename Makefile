@@ -1,7 +1,7 @@
 all: git-hooks swf/HTTPGet.swf
 
 run: all
-	( cd webroot; python -m SimpleHTTPServer )
+	( python -m SimpleHTTPServer )
 
 lint:
 	python git-tools/lint.py

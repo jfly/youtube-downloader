@@ -1,1 +1,3 @@
-After cloning, run "make". HTTPGet.swf should be created in the swf/ directory. This will only succeed if you have the Flex sdk installed, and the mxmlc binary is on you PATH.
+After cloning, run "make". HTTPGet.swf should be created in the swf/ directory. This will only succeed if you have the Flex sdk installed, and the mxmlc binary is on your PATH.
+
+The js wrapper uses swfobject (http://code.google.com/p/swfobject/).
