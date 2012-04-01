@@ -47,7 +47,9 @@ ytdl.init = function(loadedSwfCallback) {
   var params = {
     allowScriptAccess: 'always'
   };
-  swfobject.embedSWF("swf/HTTPGet.swf", httpGetDiv.id, "0", "0", "9.0.0", null, flashVars, params, null, loadedCallback);
+  var width = "400";
+  var height = "400";
+  swfobject.embedSWF("swf/HTTPGet.swf", httpGetDiv.id, width, height, "9.0.0", null, flashVars, params, null, loadedCallback);
 };
 
 

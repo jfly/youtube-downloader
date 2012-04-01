@@ -41,6 +41,7 @@ package {
 
 		public function HTTPGet() {
 			try {
+                configureListeners(loader);
 				var font:TextFormat = new TextFormat();
 				font.font = "Arial";
 				font.size = 40;
@@ -58,7 +59,8 @@ package {
 				errorCallback = params.errorCallback;
 
 				ExternalInterface.addCallback("get", function(url:String, functionName:String):void {
-                    var request:URLRequest = new URLRequest("http://localhost:8000");
+                    Security.allowDomain('google.com');
+                    var request:URLRequest = new URLRequest(url);
                     try {
                         jsCallbackFunctionName = functionName;
                         loader.load(request);
@@ -71,12 +73,51 @@ package {
 				ExternalInterface.addCallback("ping", function():Boolean {
 					return true;
 				});
+                callJs('HTTPGetLoadedCallback', 'true');
 			} catch(e:Error) {
+                callJs('HTTPGetLoadedCallback', 'false');
 				handleError(this, e);
 			}
-      
-      callJs('HTTPGetLoadedCallback', 'true');
 		}
+
+        private function configureListeners(dispatcher:IEventDispatcher):void {
+            dispatcher.addEventListener(Event.COMPLETE, completeHandler);
+            dispatcher.addEventListener(Event.OPEN, openHandler);
+            dispatcher.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+            dispatcher.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+            dispatcher.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
+            dispatcher.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+        }
+
+        private function completeHandler(event:Event):void {
+            var loader:URLLoader = URLLoader(event.target);
+            trace("completeHandler: " + loader.data);
+            callJs("foo", loader.data);
+        }
+
+        private function openHandler(event:Event):void {
+            trace("openHandler: " + event);
+            callJs("foo", "openHandler: " + event);
+        }
+
+        private function progressHandler(event:ProgressEvent):void {
+            trace("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal);
+        }
+
+        private function securityErrorHandler(event:SecurityErrorEvent):void {
+            trace("securityErrorHandler: " + event);
+            callJs("foo", "securityErrorHandler: " + event);
+        }
+
+        private function httpStatusHandler(event:HTTPStatusEvent):void {
+            trace("httpStatusHandler: " + event);
+            callJs("foo", "httpStatusHandler: " + event);
+        }
+
+        private function ioErrorHandler(event:IOErrorEvent):void {
+            trace("ioErrorHandler: " + event);
+            callJs("foo", "ioErrorHandler: " + event);
+        }
 
 		public static function handleError(source:Object, e:Error):void {
 			try {
