@@ -90,7 +90,6 @@ package {
         }
 
         private function completeHandler(event:Event):void {
-            var loader:URLLoader = URLLoader(event.target);
             trace("completeHandler: " + loader.data);
             callJs("foo", loader.data);
         }
